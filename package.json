@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "dev": "tsc --watch & http-server -c-1 www",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "typescript": "^4.0.3"
+  },
+  "devDependencies": {
+    "http-server": "^0.12.3",
+    "@typescript-eslint/eslint-plugin": "^4.2.0",
+    "@typescript-eslint/parser": "^4.2.0",
+    "eslint": "^7.9.0"
+  }
+}

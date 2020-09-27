@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "outDir": "www",
+    "removeComments": true
+  },
+  "files": [
+    "src/main.ts",
+    "src/worker.ts"
+  ]
+}

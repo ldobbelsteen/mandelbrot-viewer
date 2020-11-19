@@ -64,6 +64,6 @@ function hueToRgb(fraction) {
     case 5:
       return [255, 0, intensity]
     case 6:
-      return [255, intensity, 0]
+      return [0, 0, 0]
   }
 }

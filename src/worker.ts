@@ -1,3 +1,5 @@
+const worker: Worker = self as any
+
 this.onmessage = ({ data }) => {
   const slab: Slab = data.slab
   const coordinates: Coords = data.coordinates
@@ -8,7 +10,7 @@ this.onmessage = ({ data }) => {
     let realX = coordinates.x
     for (let x = 0; x < slab.width; x++) {
       realX += coordinates.scaleX
-      const fraction = mandelbrott(realX, realY, 255)
+      const fraction = mandelbrot(realX, realY, 255)
       const colors = hueToRgb(fraction)
       pixels[index++] = colors[0]
       pixels[index++] = colors[1]
@@ -17,14 +19,10 @@ this.onmessage = ({ data }) => {
     }
     realY += coordinates.scaleY
   }
-  respond(pixels, slab.index)
+  worker.postMessage({ pixels: pixels, index: slab.index }, [pixels.buffer])
 }
 
-function respond(pixels, index) {
-  this.postMessage({ pixels, index }, [pixels.buffer])
-}
-
-function mandelbrott(x0, y0, maxIterations) {
+function mandelbrot(x0: number, y0: number, maxIterations: number) {
   const inCardiod = 8 * x0**4 + x0**2 * (16 * y0**2 - 3) + x0 + 8 * y0**4 - 3 * y0**2 <= 0.09375
   const inBulb = x0**2 + 2 * x0 + y0**2 <= -0.9375
   if (inCardiod || inBulb) return 1
@@ -47,7 +45,7 @@ function mandelbrott(x0, y0, maxIterations) {
   return iterations / maxIterations
 }
 
-function hueToRgb(fraction) {
+function hueToRgb(fraction: number) {
   const hue = fraction * 6
   const intensity = 255 * (1 - Math.abs((hue % 2) - 1))
   switch(Math.floor(hue)) {

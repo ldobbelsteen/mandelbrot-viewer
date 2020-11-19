@@ -21,7 +21,7 @@ interface Coords {
 }
 
 const concurrency = window.navigator.hardwareConcurrency
-const canvas = document.querySelector('canvas')
+const canvas = document.createElement('canvas')
 const context = canvas.getContext('2d')
 const workers: Worker[] = new Array(concurrency)
 const slabs: Slab[] = new Array(concurrency * 4)
@@ -34,6 +34,7 @@ let workersDone: number
 let currentSlab: number
 
 function init() {
+  document.body.appendChild(canvas)
   for (let i = 0; i < workers.length; i++) {
     const worker = new Worker('worker.js')
     worker.onmessage = ({ data }) => {
@@ -104,7 +105,7 @@ function reset() {
   }
 }
 
-function instruct(worker) {
+function instruct(worker: Worker) {
   const slab = slabs[currentSlab++]
   worker.postMessage({ slab, coordinates })
 }
@@ -124,7 +125,7 @@ function render() {
   }
 }
 
-function pixelToReal(pX, pY) {
+function pixelToReal(pX: number, pY: number) {
   const rX = pX * coordinates.scaleX + coordinates.x
   const rY = pY * coordinates.scaleY - coordinates.y
   return [rX, rY]

@@ -17,3 +17,5 @@ rules:
   space-before-function-paren:
     - warn
     - always
+  max-len:
+    - warn

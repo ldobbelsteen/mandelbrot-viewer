@@ -1,16 +1,43 @@
 import 'leaflet/dist/leaflet.css'
 import './styles.css'
-
-import FractalLayer from './fractal-layer.js'
+import Threading from './threading.js'
 import Leaflet from 'leaflet'
 
-const options = {
+// Create a pool of workers to send instructions to
+const pool = Threading(navigator.hardwareConcurrency)
+
+const leaflet = Leaflet.map('leaflet', {
   attributionControl: false,
   crs: Leaflet.CRS.Simple,
-  minZoom: 1,
-  maxZoom: 45
-}
+  minZoom: 1, // Prevent zooming out too much
+  maxZoom: 45 // Prevent running out of precision
+})
 
-const leaflet = Leaflet.map('leaflet', options)
+// Custom Leaflet layer for rendering a custom plane
+const FractalLayer = Leaflet.GridLayer.extend({
+  createTile: function (coordinates, callback) {
+    const pixelSize = this.getTileSize().x
+    const canvas = document.createElement('canvas')
+    canvas.width = canvas.height = pixelSize
+    const context = canvas.getContext('2d')
+    const image = context.createImageData(pixelSize, pixelSize)
+    const realSize = 1 / Math.pow(2, coordinates.z - 1)
+    
+    pool.addJob({
+      image: image,
+      x: coordinates.x * realSize,
+      y: - coordinates.y * realSize,
+      realSize: realSize,
+      pixelSize: pixelSize
+    }, [image.data.buffer], (event) => {
+      context.putImageData(event.data, 0, 0)
+      callback(null, canvas)
+    })
+
+    return canvas
+  }
+})
+
+// Set the view and add a fractal layer
 leaflet.setView([0, 0], 1)
 leaflet.addLayer(new FractalLayer())

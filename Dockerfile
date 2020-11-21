@@ -1,10 +1,10 @@
 FROM node:alpine AS builder
-WORKDIR /build
-COPY package.json .
-RUN npm install --production
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm install
 COPY . .
 RUN npm run build
 
-FROM nginx:alpine
-COPY --from=builder /build/www /usr/share/nginx/html
+FROM caddy
+COPY --from=builder /app/dist /usr/share/caddy
 EXPOSE 80

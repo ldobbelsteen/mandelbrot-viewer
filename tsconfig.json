@@ -1,8 +1,0 @@
-{
-  "compilerOptions": {
-    "outDir": "www",
-    "strict": true,
-    "strictNullChecks": false,
-    "target": "es5"
-  }
-}

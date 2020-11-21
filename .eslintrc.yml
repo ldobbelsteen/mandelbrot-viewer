@@ -1,0 +1,19 @@
+extends: 'eslint:recommended'
+env:
+  browser: true
+  es6: true
+parserOptions:
+  sourceType: module
+rules:
+  indent:
+    - warn
+    - 2
+  quotes:
+    - warn
+    - single
+  semi:
+    - warn
+    - never
+  space-before-function-paren:
+    - warn
+    - always

@@ -1,6 +1,7 @@
 onmessage = (event) => {
   const {
     image,
+    maxIterations,
     pixelSize,
     realSize,
     x,
@@ -13,7 +14,7 @@ onmessage = (event) => {
   
   for (let pY = 0, rY = y; pY < pixelSize; pY++, rY -= scale) {
     for (let pX = 0, rX = x; pX < pixelSize; pX++, rX += scale) {
-      const fraction = mandelbrot(rX, rY, 255)
+      const fraction = mandelbrot(rX, rY, maxIterations)
       const colors = hueToRgb(fraction)
       pixels[index++] = colors[0]
       pixels[index++] = colors[1]

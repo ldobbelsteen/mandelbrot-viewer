@@ -6,6 +6,7 @@ import Leaflet from 'leaflet'
 // Create a pool of workers to send instructions to
 const pool = Threading(navigator.hardwareConcurrency)
 
+// Main Leaflet map object
 const leaflet = Leaflet.map('leaflet', {
   attributionControl: false,
   crs: Leaflet.CRS.Simple,
@@ -14,7 +15,7 @@ const leaflet = Leaflet.map('leaflet', {
 })
 
 // Custom Leaflet layer for rendering a custom plane
-const FractalLayer = Leaflet.GridLayer.extend({
+const RenderLayer = Leaflet.GridLayer.extend({
   createTile: function (coordinates, callback) {
     const pixelSize = this.getTileSize().x
     const canvas = document.createElement('canvas')
@@ -28,7 +29,8 @@ const FractalLayer = Leaflet.GridLayer.extend({
       x: coordinates.x * realSize,
       y: - coordinates.y * realSize,
       realSize: realSize,
-      pixelSize: pixelSize
+      pixelSize: pixelSize,
+      maxIterations: 255
     }, [image.data.buffer], (event) => {
       context.putImageData(event.data, 0, 0)
       callback(null, canvas)
@@ -40,4 +42,4 @@ const FractalLayer = Leaflet.GridLayer.extend({
 
 // Set the view and add a fractal layer
 leaflet.setView([0, 0], 1)
-leaflet.addLayer(new FractalLayer())
+leaflet.addLayer(new RenderLayer())

@@ -40,6 +40,23 @@ const RenderLayer = Leaflet.GridLayer.extend({
   }
 })
 
-// Set the view and add a fractal layer
+// Add link to source code
+const SourceText = Leaflet.Control.extend({
+  options: {
+    position: 'bottomright'
+  },
+  onAdd: function () {
+    const box = Leaflet.DomUtil.create('div',
+      'leaflet-control-layers leaflet-control-layers-expanded')
+    const link = document.createElement('a')
+    link.innerHTML = 'Source code'
+    link.href = 'https://github.com/ldobbelsteen/mandelbrot-viewer'
+    Leaflet.DomEvent.disableClickPropagation(box)
+    box.appendChild(link)
+    return box
+  }
+})
+
 leaflet.setView([0, 0], 1)
+leaflet.addControl(new SourceText())
 leaflet.addLayer(new RenderLayer())

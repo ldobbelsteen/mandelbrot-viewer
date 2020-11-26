@@ -19,3 +19,5 @@ rules:
     - always
   max-len:
     - warn
+  no-console:
+    - warn

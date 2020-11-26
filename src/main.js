@@ -16,27 +16,35 @@ const leaflet = Leaflet.map('leaflet', {
 
 // Custom Leaflet layer for rendering a custom plane
 const RenderLayer = Leaflet.GridLayer.extend({
+  initialize: function () {
+    this.on('tileunload', (event) => {
+      event.tile.cancel()
+    })
+  },
   createTile: function (coordinates, callback) {
     const pixelSize = this.getTileSize().x
-    const canvas = document.createElement('canvas')
-    canvas.width = canvas.height = pixelSize
-    const context = canvas.getContext('2d')
+    const tile = document.createElement('canvas')
+    tile.width = tile.height = pixelSize
+    const context = tile.getContext('2d')
     const image = context.createImageData(pixelSize, pixelSize)
     const realSize = 1 / Math.pow(2, coordinates.z - 1)
-    
-    pool.addJob({
+
+    const transferables = [image.data.buffer]
+    const message = {
       image: image,
+      pixelSize: pixelSize,
       x: coordinates.x * realSize,
       y: - coordinates.y * realSize,
       realSize: realSize,
-      pixelSize: pixelSize,
       maxIterations: 255
-    }, [image.data.buffer], (event) => {
+    }
+
+    tile.cancel = pool.addJob(message, transferables, (event) => {
       context.putImageData(event.data, 0, 0)
-      callback(null, canvas)
+      callback(null, tile)
     })
 
-    return canvas
+    return tile
   }
 })
 

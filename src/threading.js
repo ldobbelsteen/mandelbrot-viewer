@@ -1,9 +1,10 @@
 /**
  * Creates a pool of web workers ("threads") and a queue to which instructions
- * can be added, which will be executed in order by the threads. An instruction
+ * can be added, which will be executed in fifo by the threads. An instruction
  * consists of a message, an array of Transferable objects (empty if not needed)
  * and a callback function which is called when finished. Returns the function
- * with which to add instructions to the queue.
+ * with which to add instructions to the queue. This function in turn returns
+ * a function with which you can cancel the instruction later if desired.
  */
 export default (threadCount) => {
   const queue = []
@@ -21,13 +22,17 @@ export default (threadCount) => {
     const worker = pool.find(worker => !worker.busy)
     if (worker === undefined) return
 
-    const job = queue.pop()
-    if (job === undefined) return
+    // Find the oldest job that hasn't been cancelled
+    var job
+    do {
+      job = queue.shift()
+      if (job === undefined) return
+    } while (job.cancelled)
 
     worker.busy = true
     worker.onmessage = (event) => {
       worker.busy = false
-      job.callback(event)
+      if (!job.cancelled) job.callback(event)
       nextJob()
     }
     worker.postMessage(job.message, job.transferables)
@@ -35,9 +40,10 @@ export default (threadCount) => {
 
   // Add a job to the queue
   const addJob = (message, transferables, callback) => {
-    const instruction = { message, transferables, callback }
+    const instruction = { message, transferables, callback, cancelled: false }
     queue.push(instruction)
     nextJob()
+    return () => instruction.cancelled = true
   }
 
   return { addJob }

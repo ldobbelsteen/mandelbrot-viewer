@@ -16,20 +16,13 @@ export default (real, imaginary, maxIterations) => {
   while (xSquared + ySquared <= 4) {
     y = 2 * x * y + imaginary
     x = xSquared - ySquared + real
-    xSquared = Math.pow(x, 2)
-    ySquared = Math.pow(y, 2)
-    iterations++
-    if (iterations === maxIterations) return 1
+    xSquared = x * x
+    ySquared = y * y
+    if (++iterations === maxIterations) return 1
   }
-  iterations += smoothingOffset(xSquared + ySquared)
+  iterations += 1 - Math.log2(Math.log2(xSquared + ySquared))
+  if (iterations < 0) return 0
   return iterations / maxIterations
-}
-
-// Calculate offset of iterations to achieve smoother coloring
-function smoothingOffset (dotProduct) {
-  const log = Math.log2(Math.log2(dotProduct))
-  const offset = 4 - log
-  return offset
 }
 
 // Check whether a point on the complex plane is in the main cardioid

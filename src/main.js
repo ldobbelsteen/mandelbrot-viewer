@@ -1,10 +1,10 @@
 import 'leaflet/dist/leaflet.css'
 import './styles.css'
-import Threading from './threading.js'
+import Pool from './pool.js'
 import Leaflet from 'leaflet'
 
 // Create a pool of workers to send instructions to
-const pool = Threading(navigator.hardwareConcurrency)
+const pool = Pool(navigator.hardwareConcurrency)
 
 // Main Leaflet map object
 const leaflet = Leaflet.map('leaflet', {
@@ -20,6 +20,12 @@ const RenderLayer = Leaflet.GridLayer.extend({
     this.on('tileunload', (event) => {
       event.tile.cancel()
     })
+    pool.sendMessage({
+      settings: true,
+      maxIteration: 255,
+      palette: 'Hue circle',
+      power: 2
+    })
   },
   createTile: function (coordinates, callback) {
     const pixelSize = this.getTileSize().x
@@ -29,17 +35,12 @@ const RenderLayer = Leaflet.GridLayer.extend({
     const image = context.createImageData(pixelSize, pixelSize)
     const realSize = 1 / Math.pow(2, coordinates.z - 1)
 
-    const transferables = [image.data.buffer]
-    const message = {
+    tile.cancel = pool.addJob({
       image: image,
-      pixelSize: pixelSize,
-      x: coordinates.x * realSize,
-      y: - coordinates.y * realSize,
-      realSize: realSize,
-      maxIterations: 255
-    }
-
-    tile.cancel = pool.addJob(message, transferables, (event) => {
+      real: coordinates.x * realSize,
+      imaginary: - coordinates.y * realSize,
+      size: realSize
+    }, [image.data.buffer], (event) => {
       context.putImageData(event.data, 0, 0)
       callback(null, tile)
     })

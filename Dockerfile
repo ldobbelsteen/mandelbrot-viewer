@@ -1,5 +1,4 @@
-FROM node:alpine AS builder
-RUN apk add --no-cache python make g++
+FROM node AS builder
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install

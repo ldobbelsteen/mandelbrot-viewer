@@ -1,5 +1,5 @@
-import Mandelbrot from "../mandelbrot.js"
-import Palette from "../palette.js"
+import Mandelbrot from "./mandelbrot.js"
+import Palette from "./palette.js"
 
 var mandelbrot
 var palette

@@ -1,4 +1,4 @@
-import Worker from "./worker/main.js"
+import Worker from "./worker.js"
 
 /**
  * Creates a pool of web workers and a queue to which instructions can be added,

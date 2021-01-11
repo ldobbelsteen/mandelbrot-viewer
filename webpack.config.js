@@ -6,7 +6,7 @@ const ESLintPlugin = require("eslint-webpack-plugin")
 module.exports = {
 	entry: {
 		bundle: "./src/main.js",
-		worker: "./src/worker/main.js"
+		worker: "./src/worker.js"
 	},
 	plugins: [
 		new ESLintPlugin(),
@@ -30,7 +30,7 @@ module.exports = {
 			{
 				test: /\.js$/,
 				use: ["worker-loader"],
-				include: path.resolve(__dirname, "./src/worker")
+				include: path.resolve(__dirname, "./src/worker.js")
 			},
 			{
 				test: /\.(woff2|woff|eot|ttf|otf|png)$/i,

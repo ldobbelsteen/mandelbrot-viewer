@@ -6,5 +6,5 @@ COPY . .
 RUN npm run build
 
 FROM caddy
-COPY --from=builder /app/dist /usr/share/caddy
+COPY --from=builder /app/build /usr/share/caddy
 EXPOSE 80

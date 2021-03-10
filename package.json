@@ -1,19 +1,11 @@
 {
 	"scripts": {
-		"dev": "webpack serve --mode development",
-		"build": "webpack bundle --mode production"
+		"dev": "snowpack dev",
+		"build": "snowpack build"
 	},
 	"dependencies": {
-		"clean-webpack-plugin": "^3.0.0",
-		"css-loader": "^5.0.1",
 		"eslint": "^7.14.0",
-		"eslint-webpack-plugin": "^2.4.1",
-		"html-webpack-plugin": "^4.5.1",
 		"leaflet": "^1.7.1",
-		"style-loader": "^2.0.0",
-		"webpack": "^5.12.3",
-		"webpack-cli": "^4.3.1",
-		"webpack-dev-server": "^3.11.1",
-		"worker-loader": "^3.0.7"
+		"snowpack": "^3.0.13"
 	}
 }

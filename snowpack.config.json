@@ -1,0 +1,11 @@
+{
+	"mount": {
+		"src": "/"
+	},
+	"optimize": {
+		"bundle": true,
+		"minify": true,
+		"treeshake": true,
+		"target": "es2015"
+	}
+}

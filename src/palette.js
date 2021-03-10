@@ -1,23 +1,26 @@
-export const palettes = [
-	"Grayscale",
-	"Grayscale cyclic",
-	"Hue circle",
-	"Hue circle cyclic"
-]
+/**
+ * Set of available palettes for coloring the Mandelbrot set. A list of the
+ * names of the available palettes can be retrieved and the palette algorithm
+ * can be retrieved by its name.
+ */
+const palettes = {
+	"Hue circle": hueCircle(false),
+	"Hue circle cyclic": hueCircle(true),
+	"Grayscale": grayscale(false),
+	"Grayscale cyclic": grayscale(true),
+}
 
-export default (name) => {
-	switch (name) {
-	case "Grayscale": return grayscale(false)
-	case "Grayscale cyclic": return grayscale(true)
-	case "Hue circle": return hueCircle(false)
-	case "Hue circle cyclic": return hueCircle(true)
-	default: throw "Invalid palette name!"
-	}
+export function listPalettes () {
+	return Object.keys(palettes)
+}
+
+export function getPalette (name) {
+	return palettes[name]
 }
 
 function grayscale (cyclic) {
 	return (fraction) => {
-		var lightness
+		let lightness
 		if (cyclic) {
 			lightness = 255 * (1 - Math.abs(2 * fraction - 1))
 		} else {

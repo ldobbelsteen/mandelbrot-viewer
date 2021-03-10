@@ -5,10 +5,10 @@
  * 
  * Each of the algorithms returns the ratio between the number of iterations it
  * took to reach a modulus of 2 or more and the maximum iteration count. It
- * returns 1 if the point didn"t escape within the maximum iterations. As such
- * the return value"s domain is guaranteed to be [0..1]
+ * returns 1 if the point didn't escape within the maximum iterations. As such
+ * the return value's domain is guaranteed to be [0..1]
  */
-export default (maxIteration, power) => {
+export function getAlgorithm (maxIteration, power) {
 	if (power === 2) {
 		return mandelbrot(maxIteration)
 	} else if (power === 3) {

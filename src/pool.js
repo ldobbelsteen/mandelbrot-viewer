@@ -1,5 +1,3 @@
-import Worker from "./worker.js"
-
 /**
  * Creates a pool of web workers and a queue to which instructions can be added,
  * which will be executed in fi-fo by the workers. An instruction consists of a
@@ -16,7 +14,10 @@ export default (workerCount) => {
 
 	// Populate the pool with workers
 	for (let i = 0; i < workerCount; i++) {
-		const worker = new Worker()
+		const worker = new Worker(new URL("worker.js", import.meta.url), {
+			name: "engine",
+			type: "module",
+		})
 		worker.busy = false
 		pool.push(worker)
 	}
@@ -27,7 +28,7 @@ export default (workerCount) => {
 		if (worker === undefined) return
 
 		// Find the oldest job that hasn"t been cancelled
-		var job
+		let job
 		do {
 			job = queue.shift()
 			if (job === undefined) return
@@ -44,7 +45,12 @@ export default (workerCount) => {
 
 	// Add a job to the queue
 	const addJob = (message, transferables, callback) => {
-		const instruction = { message, transferables, callback, cancelled: false }
+		const instruction = {
+			message,
+			transferables,
+			callback,
+			cancelled: false,
+		}
 		queue.push(instruction)
 		nextJob()
 		return () => instruction.cancelled = true

@@ -51,8 +51,7 @@ const SourceText = Leaflet.Control.extend({
 		position: "bottomright",
 	},
 	onAdd: function () {
-		const box = Leaflet.DomUtil.create("div",
-			"leaflet-control-layers leaflet-control-layers-expanded")
+		const box = Leaflet.DomUtil.create("div", "leaflet-control-layers leaflet-control-layers-expanded")
 		const link = document.createElement("a")
 		link.innerHTML = "Source code"
 		link.href = "https://github.com/ldobbelsteen/mandelbrot-viewer"
@@ -68,11 +67,7 @@ const SettingsMenu = Leaflet.Control.extend({
 		position: "bottomleft",
 	},
 	onAdd: function () {
-		const box = Leaflet.DomUtil.create("div", `
-			leaflet-control-layers
-			leaflet-control-layers-expanded
-			settings-menu
-		`)
+		const box = Leaflet.DomUtil.create("div", "leaflet-control-layers leaflet-control-layers-expanded settings-menu")
 
 		// Configure the maximum iterations of the Mandelbrot function
 		const iterDiv = document.createElement("div")
@@ -82,7 +77,9 @@ const SettingsMenu = Leaflet.Control.extend({
 		iterDiv.appendChild(iterText)
 		const iterInput = document.createElement("input")
 		iterInput.type = "number"
-		iterInput.value = 128
+		iterInput.value = 145
+		iterInput.min = 1
+		iterInput.step = 48
 		iterDiv.appendChild(iterInput)
 		
 		// Selector for the color palette

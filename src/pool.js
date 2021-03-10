@@ -14,10 +14,7 @@ export default (workerCount) => {
 
 	// Populate the pool with workers
 	for (let i = 0; i < workerCount; i++) {
-		const worker = new Worker(new URL("worker.js", import.meta.url), {
-			name: "engine",
-			type: "module",
-		})
+		const worker = new Worker("./worker.js")
 		worker.busy = false
 		pool.push(worker)
 	}

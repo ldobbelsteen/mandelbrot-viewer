@@ -1,7 +1,7 @@
 /**
- * Set of available palettes for coloring the Mandelbrot set. A list of the
- * names of the available palettes can be retrieved and the palette algorithm
- * can be retrieved by its name.
+ * Set of available palettes for coloring the Mandelbrot set. A palette
+ * algorithm can be retrieved by its name and a list of the names of the
+ * available palettes can also be retrieved.
  */
 const palettes = {
 	"Hue circle": hueCircle(false),

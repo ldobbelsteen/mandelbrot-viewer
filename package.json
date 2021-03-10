@@ -1,7 +1,7 @@
 {
 	"scripts": {
 		"dev": "parcel serve src/index.html",
-		"build": "parcel build src/index.html"
+		"build": "parcel build --no-source-maps src/index.html"
 	},
 	"dependencies": {
 		"eslint": "^7.14.0",

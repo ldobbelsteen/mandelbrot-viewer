@@ -4,8 +4,8 @@
 		"build": "parcel build --no-source-maps src/index.html"
 	},
 	"dependencies": {
-		"eslint": "^7.14.0",
+		"eslint": "^7.23.0",
 		"leaflet": "^1.7.1",
-		"parcel": "^2.0.0-beta.1"
+		"parcel": "^2.0.0-beta.2"
 	}
 }

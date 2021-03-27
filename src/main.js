@@ -81,7 +81,7 @@ const SettingsMenu = Leaflet.Control.extend({
 		iterInput.min = 1
 		iterInput.step = 48
 		iterDiv.appendChild(iterInput)
-		
+
 		// Selector for the color palette
 		const paletteDiv = document.createElement("div")
 		box.appendChild(paletteDiv)
@@ -120,7 +120,7 @@ const SettingsMenu = Leaflet.Control.extend({
 		zoomDiv.appendChild(zoomButton)
 
 		// Send the current settings to all of the workers
-		function updateSettings () {
+		function updateSettings() {
 			pool.sendMessage({
 				areSettings: true,
 				maxIteration: parseInt(iterInput.value),

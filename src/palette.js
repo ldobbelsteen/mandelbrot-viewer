@@ -10,15 +10,15 @@ const palettes = {
 	"Grayscale cyclic": grayscale(true),
 }
 
-export function listPalettes () {
+export function listPalettes() {
 	return Object.keys(palettes)
 }
 
-export function getPalette (name) {
+export function getPalette(name) {
 	return palettes[name]
 }
 
-function grayscale (cyclic) {
+function grayscale(cyclic) {
 	return (fraction) => {
 		let lightness
 		if (cyclic) {
@@ -30,29 +30,29 @@ function grayscale (cyclic) {
 	}
 }
 
-function hueCircle (cyclic) {
+function hueCircle(cyclic) {
 	return (fraction) => {
 		const section = fraction * 6
 		const intensity = 255 * (1 - Math.abs((section % 2) - 1))
 		switch (Math.floor(section)) {
-		case 0:
-			return [255, intensity, 0]
-		case 1:
-			return [intensity, 255, 0]
-		case 2:
-			return [0, 255, intensity]
-		case 3:
-			return [0, intensity, 255]
-		case 4:
-			return [intensity, 0, 255]
-		case 5:
-			return [255, 0, intensity]
-		case 6:
-			if (cyclic) {
+			case 0:
 				return [255, intensity, 0]
-			} else {
-				return [0, 0, 0]
-			}
+			case 1:
+				return [intensity, 255, 0]
+			case 2:
+				return [0, 255, intensity]
+			case 3:
+				return [0, intensity, 255]
+			case 4:
+				return [intensity, 0, 255]
+			case 5:
+				return [255, 0, intensity]
+			case 6:
+				if (cyclic) {
+					return [255, intensity, 0]
+				} else {
+					return [0, 0, 0]
+				}
 		}
 	}
 }

@@ -52,7 +52,7 @@ export default (workerCount) => {
 		nextJob()
 		return () => instruction.cancelled = true
 	}
-	
+
 	// Send single message to all the workers
 	const sendMessage = (message, transferables) => {
 		pool.forEach((worker) => {

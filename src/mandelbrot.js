@@ -8,7 +8,7 @@
  * returns 1 if the point didn't escape within the maximum iterations. As such
  * the return value's domain is guaranteed to be [0..1]
  */
-export function getAlgorithm (maxIteration, power) {
+export function getAlgorithm(maxIteration, power) {
 	if (power === 2) {
 		return mandelbrot(maxIteration)
 	} else if (power === 3) {
@@ -20,7 +20,7 @@ export function getAlgorithm (maxIteration, power) {
 	}
 }
 
-function mandelbrot (maxIteration) {
+function mandelbrot(maxIteration) {
 	const inCardioid = (real, imaginary) => {
 		const realCenter = real - 0.25
 		const imaginarySquared = Math.pow(imaginary, 2)
@@ -46,7 +46,7 @@ function mandelbrot (maxIteration) {
 
 		let x2 = Math.pow(x, 2)
 		let y2 = Math.pow(y, 2)
-		
+
 		while (x2 + y2 <= 4) {
 			if (++iteration === maxIteration) return 1
 			y = 2 * x * y + imaginary
@@ -62,7 +62,7 @@ function mandelbrot (maxIteration) {
 	}
 }
 
-function multibrot3 (maxIteration) {
+function multibrot3(maxIteration) {
 	return (real, imaginary) => {
 		let x = real
 		let y = imaginary
@@ -86,7 +86,7 @@ function multibrot3 (maxIteration) {
 	}
 }
 
-function multibrot (maxIteration, power) {
+function multibrot(maxIteration, power) {
 	return (real, imaginary) => {
 		let x = real
 		let y = imaginary
@@ -110,7 +110,7 @@ function multibrot (maxIteration, power) {
 	}
 }
 
-function minibrot (maxIteration, power) {
+function minibrot(maxIteration, power) {
 	return (real, imaginary) => {
 		let x = real
 		let y = imaginary

@@ -8,13 +8,29 @@
 		"ecmaVersion": 2020
 	},
 	"rules": {
-		"indent": ["warn", "tab"],
-		"quotes": ["warn", "double"],
-		"semi": ["warn", "never"],
+		"indent": [
+			"warn",
+			"tab"
+		],
+		"quotes": [
+			"warn",
+			"double"
+		],
+		"semi": [
+			"warn",
+			"never"
+		],
 		"prefer-const": "warn",
 		"no-var": "warn",
-		"comma-dangle": ["warn", "always-multiline"],
-		"space-before-function-paren": ["error", "always"],
-		"max-len": ["warn", { "code": 128 }]
+		"comma-dangle": [
+			"warn",
+			"always-multiline"
+		],
+		"max-len": [
+			"warn",
+			{
+				"code": 128
+			}
+		]
 	}
 }

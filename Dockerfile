@@ -1,10 +1,10 @@
-FROM node AS builder
-WORKDIR /app
+FROM node:alpine AS builder
+WORKDIR /build
 COPY package.json package-lock.json ./
 RUN npm install
 COPY . .
 RUN npm run build
 
-FROM caddy
-COPY --from=builder /app/dist /usr/share/caddy
+FROM caddy:alpine
+COPY --from=builder /build/dist /usr/share/caddy
 EXPOSE 80

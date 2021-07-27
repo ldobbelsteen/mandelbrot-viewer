@@ -1,9 +1,17 @@
 body {
-  margin: 0;
-  padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 html, body, #leaflet {
-  height: 100%;
-  width: 100%;
+	height: 100%;
+	width: 100%;
+}
+
+.settings-menu > * {
+	padding: 0.2em;
+}
+
+.settings-menu > div > input {
+	width: 4em;
 }

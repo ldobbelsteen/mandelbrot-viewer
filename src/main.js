@@ -91,6 +91,7 @@ const SettingsMenu = Leaflet.Control.extend({
     iterInput.value = 145;
     iterInput.min = 1;
     iterInput.step = 48;
+    iterInput.title = "Iterations";
     iterDiv.appendChild(iterInput);
 
     // Selector for the color palette
@@ -116,6 +117,7 @@ const SettingsMenu = Leaflet.Control.extend({
     const powerInput = document.createElement("input");
     powerInput.type = "number";
     powerInput.value = 2;
+    powerInput.title = "Power";
     powerDiv.appendChild(powerInput);
 
     // Reset the zoom level to the default level

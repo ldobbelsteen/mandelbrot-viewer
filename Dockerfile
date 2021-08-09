@@ -1,8 +1,8 @@
 FROM node:alpine AS builder
 WORKDIR /build
-COPY package.json package-lock.json ./
-RUN npm install
 COPY . .
+RUN npm install
+RUN npm run lint
 RUN npm run build
 
 FROM caddy:alpine

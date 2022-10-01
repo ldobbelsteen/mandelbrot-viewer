@@ -11,6 +11,6 @@
 		"eslint-plugin-prettier": "^4.0.0",
 		"leaflet": "^1.7.1",
 		"prettier": "^2.5.1",
-		"vite": "^2.8.6"
+		"vite": "^3.1.4"
 	}
 }

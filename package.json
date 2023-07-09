@@ -10,7 +10,7 @@
 		"eslint-plugin-import": "^2.26.0",
 		"eslint-plugin-prettier": "^4.2.1",
 		"leaflet": "^1.9.3",
-		"prettier": "^2.7.1",
+		"prettier": "^3.0.0",
 		"vite": "^4.1.5"
 	}
 }

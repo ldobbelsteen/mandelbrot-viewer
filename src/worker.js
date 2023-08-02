@@ -19,7 +19,7 @@ onmessage = (event) => {
       event.data.image,
       event.data.real,
       event.data.imaginary,
-      event.data.size
+      event.data.size,
     );
   }
 };

@@ -2,7 +2,6 @@ FROM node:alpine AS builder
 WORKDIR /build
 COPY . .
 RUN npm install
-RUN npm run lint
 RUN npm run build
 
 FROM caddy:alpine

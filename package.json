@@ -4,24 +4,26 @@
 		"build": "vite build"
 	},
 	"dependencies": {
+		"@types/leaflet": "^1.9.3",
+		"@typescript-eslint/eslint-plugin": "^6.2.1",
+		"@typescript-eslint/parser": "^6.2.1",
 		"eslint": "^8.46.0",
 		"eslint-config-prettier": "^8.9.0",
 		"eslint-plugin-prettier": "^5.0.0",
 		"leaflet": "^1.9.4",
 		"prettier": "^3.0.0",
+		"typescript": "^5.1.6",
 		"vite": "^4.4.8"
 	},
 	"eslintConfig": {
-		"env": {
-			"browser": true
-		},
 		"extends": [
 			"eslint:recommended",
+			"plugin:@typescript-eslint/recommended",
+			"plugin:@typescript-eslint/recommended-requiring-type-checking",
 			"plugin:prettier/recommended"
 		],
 		"parserOptions": {
-			"ecmaVersion": "latest",
-			"sourceType": "module"
+			"project": "./tsconfig.json"
 		}
 	}
 }

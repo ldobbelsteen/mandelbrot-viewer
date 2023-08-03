@@ -1,83 +1,86 @@
 import "leaflet/dist/leaflet.css";
 import "./styles.css";
-import Leaflet from "leaflet";
-import MandelbrotWorker from "./worker?worker"; // eslint-disable-line import/no-unresolved
-import Pool from "./pool";
-import { listPalettes } from "./palette";
+import {
+  GridLayer,
+  DoneCallback,
+  CRS,
+  map,
+  Control,
+  DomUtil,
+  DomEvent,
+  Coords,
+  Layer,
+} from "leaflet";
+import RenderPool from "./pool";
+import { palettes } from "./palette";
 
-// Create a pool of workers to send instructions to
-const pool = Pool(MandelbrotWorker, navigator.hardwareConcurrency);
+const pool = new RenderPool(navigator.hardwareConcurrency);
 
-// Main Leaflet map object
-const leaflet = Leaflet.map("leaflet", {
-  attributionControl: false,
-  crs: Leaflet.CRS.Simple,
+const leaflet = map("leaflet", {
+  attributionControl: false, // Disable Leaflet link
+  crs: CRS.Simple, // Use simple (x,y) coordinate system
   minZoom: 1, // Prevent zooming out too much
   maxZoom: 45, // Prevent running out of precision
 });
 
-// Custom Leaflet layer for rendering a custom plane
-const RenderLayer = Leaflet.GridLayer.extend({
-  initialize: function () {
-    this.on("tileunload", (event) => {
-      event.tile.cancel();
-    });
-  },
-  createTile: function (coordinates, callback) {
-    const pixelSize = this.getTileSize().x;
-    const tile = document.createElement("canvas");
-    tile.width = tile.height = pixelSize;
-    const context = tile.getContext("2d");
-    const image = context.createImageData(pixelSize, pixelSize);
-    const realSize = 1 / Math.pow(2, coordinates.z - 1);
+class RenderLayer extends GridLayer {
+  createTile(coords: Coords, done: DoneCallback) {
+    const imageSize = this.getTileSize().x;
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = imageSize;
 
-    tile.cancel = pool.addJob(
+    const context = canvas.getContext("2d")!;
+    const image = context.createImageData(imageSize, imageSize);
+    const regionSize = 1 / Math.pow(2, coords.z - 1);
+
+    canvas.oncancel = pool.addRender(
       {
-        areSettings: false,
-        image: image,
-        real: coordinates.x * realSize,
-        imaginary: -coordinates.y * realSize,
-        size: realSize,
+        image,
+        imageSize,
+        regionTopLeftReal: coords.x * regionSize,
+        regionTopLeftImaginary: -coords.y * regionSize,
+        regionSize,
       },
-      [image.data.buffer],
-      (event) => {
-        context.putImageData(event.data, 0, 0);
-        callback(null, tile);
-      }
+      (image) => {
+        context.putImageData(image, 0, 0);
+        done(undefined, canvas);
+      },
     );
 
-    return tile;
-  },
-});
+    return canvas;
+  }
+}
 
-// Add link to source code
-const SourceText = Leaflet.Control.extend({
-  options: {
-    position: "bottomright",
-  },
-  onAdd: function () {
-    const box = Leaflet.DomUtil.create(
+class SourceText extends Control {
+  constructor() {
+    super();
+    this.options.position = "bottomright";
+  }
+
+  onAdd() {
+    const box = DomUtil.create(
       "div",
-      "leaflet-control-layers leaflet-control-layers-expanded"
+      "leaflet-control-layers leaflet-control-layers-expanded",
     );
     const link = document.createElement("a");
     link.innerHTML = "Source code";
     link.href = "https://github.com/ldobbelsteen/mandelbrot-viewer";
-    Leaflet.DomEvent.disableClickPropagation(box);
+    DomEvent.disableClickPropagation(box);
     box.appendChild(link);
     return box;
-  },
-});
+  }
+}
 
-// Add settings/configuration/information menu
-const SettingsMenu = Leaflet.Control.extend({
-  options: {
-    position: "bottomleft",
-  },
-  onAdd: function () {
-    const box = Leaflet.DomUtil.create(
+class SettingsMenu extends Control {
+  constructor() {
+    super();
+    this.options.position = "bottomleft";
+  }
+
+  onAdd() {
+    const box = DomUtil.create(
       "div",
-      "leaflet-control-layers leaflet-control-layers-expanded settings-menu"
+      "leaflet-control-layers leaflet-control-layers-expanded settings-menu",
     );
 
     // Configure the maximum iterations of the Mandelbrot function
@@ -88,9 +91,9 @@ const SettingsMenu = Leaflet.Control.extend({
     iterDiv.appendChild(iterText);
     const iterInput = document.createElement("input");
     iterInput.type = "number";
-    iterInput.value = 145;
-    iterInput.min = 1;
-    iterInput.step = 48;
+    iterInput.value = "145";
+    iterInput.min = "1";
+    iterInput.step = "48";
     iterInput.title = "Iterations";
     iterDiv.appendChild(iterInput);
 
@@ -101,7 +104,7 @@ const SettingsMenu = Leaflet.Control.extend({
     paletteText.innerHTML = "Color palette: ";
     paletteDiv.appendChild(paletteText);
     const paletteInput = document.createElement("select");
-    listPalettes().forEach((palette) => {
+    Object.keys(palettes).forEach((palette) => {
       const option = document.createElement("option");
       option.innerHTML = palette;
       paletteInput.appendChild(option);
@@ -116,7 +119,7 @@ const SettingsMenu = Leaflet.Control.extend({
     powerDiv.appendChild(powerText);
     const powerInput = document.createElement("input");
     powerInput.type = "number";
-    powerInput.value = 2;
+    powerInput.value = "2";
     powerInput.title = "Power";
     powerDiv.appendChild(powerInput);
 
@@ -134,15 +137,13 @@ const SettingsMenu = Leaflet.Control.extend({
 
     // Send the current settings to all of the workers
     function updateSettings() {
-      pool.sendMessage({
-        areSettings: true,
-        maxIteration: parseInt(iterInput.value),
-        palette: paletteInput.value,
-        power: parseInt(powerInput.value),
+      pool.broadcastSettings({
+        maxIterations: parseInt(iterInput.value),
+        paletteName: paletteInput.value,
+        mandelbrotPower: parseInt(powerInput.value),
       });
-      pool.ready = true;
-      leaflet.eachLayer((layer) => {
-        layer.redraw();
+      leaflet.eachLayer((layer: Layer) => {
+        (layer as RenderLayer).redraw();
       });
     }
 
@@ -152,10 +153,10 @@ const SettingsMenu = Leaflet.Control.extend({
     powerInput.onchange = updateSettings;
     updateSettings();
 
-    Leaflet.DomEvent.disableClickPropagation(box);
+    DomEvent.disableClickPropagation(box);
     return box;
-  },
-});
+  }
+}
 
 leaflet.addControl(new SettingsMenu());
 leaflet.addControl(new SourceText());

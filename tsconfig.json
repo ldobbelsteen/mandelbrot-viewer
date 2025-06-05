@@ -1,22 +1,13 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "esModuleInterop": true,
-    "lib": [
-      "dom",
-      "esnext",
-    ],
-    "module": "esnext",
-    "moduleResolution": "node",
-    "outDir": "out",
-    "skipLibCheck": true,
+    "lib": ["ESNext", "DOM", "WebWorker"],
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
     "strict": true,
-    "types": [
-      "vite/client"
-    ],
+    "skipLibCheck": true,
+    "types": ["vite/client"]
   },
-  "include": [
-    "*.js",
-    "src/**/*.ts",
-  ],
+  "include": ["**/*.ts"]
 }

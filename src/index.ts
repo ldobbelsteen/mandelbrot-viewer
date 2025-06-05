@@ -1,18 +1,18 @@
 import "leaflet/dist/leaflet.css";
 import "./styles.css";
 import {
-  GridLayer,
-  DoneCallback,
   CRS,
-  map,
   Control,
-  DomUtil,
+  type Coords,
   DomEvent,
-  Coords,
-  Layer,
+  DomUtil,
+  type DoneCallback,
+  GridLayer,
+  type Layer,
+  map,
 } from "leaflet";
-import RenderPool from "./pool";
 import { palettes } from "./palette";
+import RenderPool from "./pool";
 
 const pool = new RenderPool(navigator.hardwareConcurrency);
 
@@ -29,9 +29,14 @@ class RenderLayer extends GridLayer {
     const canvas = document.createElement("canvas");
     canvas.width = canvas.height = imageSize;
 
-    const context = canvas.getContext("2d")!;
+    const context = canvas.getContext("2d");
+    if (!context) {
+      done(new Error("Failed to create canvas context"));
+      return canvas;
+    }
+
     const image = context.createImageData(imageSize, imageSize);
-    const regionSize = 1 / Math.pow(2, coords.z - 1);
+    const regionSize = 1 / 2 ** (coords.z - 1);
 
     canvas.oncancel = pool.addRender(
       {
@@ -104,11 +109,11 @@ class SettingsMenu extends Control {
     paletteText.innerHTML = "Color palette: ";
     paletteDiv.appendChild(paletteText);
     const paletteInput = document.createElement("select");
-    Object.keys(palettes).forEach((palette) => {
+    for (const palette of Object.keys(palettes)) {
       const option = document.createElement("option");
       option.innerHTML = palette;
       paletteInput.appendChild(option);
-    });
+    }
     paletteDiv.appendChild(paletteInput);
 
     // Configure the power to use in the Mandelbrot function
@@ -138,9 +143,9 @@ class SettingsMenu extends Control {
     // Send the current settings to all of the workers
     function updateSettings() {
       pool.broadcastSettings({
-        maxIterations: parseInt(iterInput.value),
+        maxIterations: Number.parseInt(iterInput.value),
         paletteName: paletteInput.value,
-        mandelbrotPower: parseInt(powerInput.value),
+        mandelbrotPower: Number.parseInt(powerInput.value),
       });
       leaflet.eachLayer((layer: Layer) => {
         (layer as RenderLayer).redraw();

@@ -1,4 +1,4 @@
-import { RenderInstruction, RenderSettings } from "./worker/worker";
+import type { RenderInstruction, RenderSettings } from "./worker";
 
 /**
  * Basic pool which manages multiple rendering Web Workers. It accepts
@@ -23,7 +23,7 @@ export default class RenderPool {
 
     for (let i = 0; i < size; i++) {
       this.workers.push({
-        worker: new Worker(new URL("./worker/worker.ts", import.meta.url), {
+        worker: new Worker(new URL("./worker.ts", import.meta.url), {
           type: "module",
         }),
         isBusy: false,
@@ -49,9 +49,9 @@ export default class RenderPool {
   }
 
   broadcastSettings(settings: RenderSettings) {
-    this.workers.forEach((w) => {
+    for (const w of this.workers) {
       w.worker.postMessage(settings);
-    });
+    }
   }
 
   private tryRender() {

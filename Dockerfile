@@ -5,6 +5,6 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM docker.io/nginx:1.28-alpine
+FROM docker.io/nginx:1.29-alpine
 COPY --from=builder /build/dist /usr/share/nginx/html
 EXPOSE 80

@@ -1,9 +1,7 @@
-import "leaflet/dist/leaflet.css";
-import "./styles.css";
 import {
-  CRS,
   Control,
   type Coords,
+  CRS,
   DomEvent,
   DomUtil,
   type DoneCallback,
@@ -11,8 +9,10 @@ import {
   type Layer,
   map,
 } from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { palettes } from "./palette";
 import RenderPool from "./pool";
+import "./styles.css";
 
 const pool = new RenderPool(navigator.hardwareConcurrency);
 
@@ -143,9 +143,9 @@ class SettingsMenu extends Control {
     // Send the current settings to all of the workers
     function updateSettings() {
       pool.broadcastSettings({
-        maxIterations: Number.parseInt(iterInput.value),
+        maxIterations: Number.parseInt(iterInput.value, 10),
         paletteName: paletteInput.value,
-        mandelbrotPower: Number.parseInt(powerInput.value),
+        mandelbrotPower: Number.parseInt(powerInput.value, 10),
       });
       leaflet.eachLayer((layer: Layer) => {
         (layer as RenderLayer).redraw();

@@ -1,5 +1,5 @@
-import { getAlgorithm } from "./algorithm";
 import type { Algorithm } from "./algorithm";
+import { getAlgorithm } from "./algorithm";
 import { type Palette, palettes } from "./palette";
 
 export interface RenderInstruction {
